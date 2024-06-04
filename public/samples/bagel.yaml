@@ -1,0 +1,70 @@
+openapi: 3.0.3
+info:
+  title: Everything Bagel
+  version: 0.0.1
+  summary: Everything Bagel Summary
+  description: Everything Bagel Description
+  termsOfService: http://everthingbagel.org/terms
+  contact:
+    name: Mr Bagel
+    url: http://everthingbagel.org
+    email: mrbagel@everthingbagel.org
+  license:
+    name: MIT License
+    url: https://opensource.org/license/mit
+    identifier: MIT
+paths:
+  /bagels:
+    get:
+      operationId: getBagels
+      tags:
+        - store
+    post:
+      operationId: postBagels
+      tags:
+        - store
+  /bagels/{id}:
+    get:
+      operationId: getBagelsById
+  /bagels/{id}/type/{typeId}:
+    get:
+      operationId: getTypeByTypeId
+  /bagels/store/{storeId}/batch/{batchId}/bin/{binId}:
+    get:
+      operationId: getBinByBinId
+      tags:
+        - bakery
+servers:
+  - url: http://localhost:8080
+    variables:
+      poppy:
+        default: some
+        description: some poppy seeds on my bagel, please
+      sesame:
+        default: some
+        description: some sesame seeds on my bagel, please
+      garlic:
+        default: pinch
+        description: a pinch of garlic on my bagel, please
+    description: everything bagel server
+tags:
+  - name: store
+    description: A place to sell bagels
+    externalDocs:
+      url: https://www.bodosbagels.com/
+      description: like at Bodo's
+  - name: bakery
+components:
+  schemas:
+    Bagel:
+      type: object
+      properties:
+        type: {}
+        name: {}
+        price: {}
+      required:
+        - type
+security: []
+externalDocs:
+  description: a sample bagelry
+  url: https://www.bodosbagels.com/
