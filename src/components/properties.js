@@ -54,7 +54,7 @@ export default {
 
 <ul class="nav nav-pills nav-fill" v-if="style==='nav'">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="#">Properties</a>
+    <a class="nav-link active" aria-current="page">Properties</a>
   </li>
 </ul>
    

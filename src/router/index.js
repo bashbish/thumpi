@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import thumpi from '../thumpi/thumpi.js'
 
 import OADocuments from '../components/documents.vue'
 import OADocument from '../components/document.vue'
@@ -45,7 +46,7 @@ import Encoding from '../components/encoding.js'
 
 const routes = [
   { path: '/documents', component: OADocuments },
-  { path: '/', component: OpenAPI },
+  { path: '/', component: OpenAPI, name: 'home'},
   { path: '/about', component: About },
   { path: '/documents/:doci', component: OADocument },
   { path: '/documents/:doci/servers', component: Servers },
@@ -178,6 +179,14 @@ const router = createRouter({
   //history: createMemoryHistory(),
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
-})
+});
+
+
+//router.beforeEach(async (to, from) => {
+  //if ( to.name !== 'home' && (!thumpi.getDocs() || !(thumpi.getDocs().length > 0))) {
+  //  return { name: 'home' }
+  // }
+ // thumpi.saveDocs();
+//});
 
 export default router

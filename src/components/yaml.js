@@ -54,7 +54,7 @@ export default {
             </button>
 <ul class="nav nav-pills nav-fill mb-3">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="#" @click="toLink('/documents')">YAML <Uparrow></Uparrow></a>
+    <a class="nav-link active" aria-current="page" @click="toLink('/documents')">YAML <Uparrow></Uparrow></a>
   </li>
 </ul>
 <div class="mb-3" v-if="mode=='show'">

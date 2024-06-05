@@ -28,13 +28,13 @@ export default {
   template: `
 <ul class="nav nav-pills nav-fill">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="#" @click="toLink($thumpi.baseLink($route, 'doc'))">Security <Uparrow></Uparrow></a>
+    <a class="nav-link active" aria-current="page" @click="toLink($thumpi.baseLink($route, 'doc'))">Security <Uparrow></Uparrow></a>
   </li>
 </ul>
 
 <ul class="nav nav-pills nav-fill mb-3">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="#" data-bs-toggle="collapse" data-bs-target="#addSecCard" aria-expanded="false" aria-controls="addSecCard">Security <Downarrow></Downarrow></a>
+    <a class="nav-link active" aria-current="page" data-bs-toggle="collapse" data-bs-target="#addSecCard" aria-expanded="false" aria-controls="addSecCard">Security <Downarrow></Downarrow></a>
   </li>
 </ul>
 "apiKey", "http", "oauth2", "openIdConnect"

@@ -15,7 +15,7 @@ export default {
   template: `
 <ul class="nav nav-pills nav-fill">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="#" @click="toLink($thumpi.baseLink($route,'doc'))">License <Uparrow></Uparrow></a>
+    <a class="nav-link active" aria-current="page" @click="toLink($thumpi.baseLink($route,'doc'))">License <Uparrow></Uparrow></a>
   </li>
 </ul>
 <div class="mb-3 mt-3">

@@ -15,7 +15,7 @@ export default {
   template: `
 <ul class="nav nav-pills nav-fill">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="#" @click="toLink('/documents/'+doci+'/components')">Links</a>
+    <a class="nav-link active" aria-current="page" @click="toLink('/documents/'+doci+'/components')">Links</a>
   </li>
 </ul>
 <ul class="list-group">

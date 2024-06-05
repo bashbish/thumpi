@@ -1,4 +1,6 @@
 import baseLink from './links.js'
+import router from "@/router/index.js";
+import jsYaml from 'js-yaml'
 
 const thumpi = {}
 
@@ -42,9 +44,19 @@ thumpi.debug = (obj) => {
   }
   return undefined
 }
+
+thumpi.route = (router, link) => {
+  if ( thumpi.isDebug) {
+    console.log(link)
+  }
+  router.push(link)
+}
 // docs
 
 thumpi.getDocs = () => {
+  if ( !thumpi.yamls ) {
+    thumpi.initDocs();
+  }
   return thumpi.yamls
 }
 
@@ -52,7 +64,8 @@ thumpi.getDoc = ($route) => {
   return thumpi.getDocs()[$route.params.doci]
 }
 
-thumpi.addDoc = (version) => {
+
+thumpi.addNewDocByVersion = (version) => {
   thumpi
     .getDocs()
     .push({ openapi: version, info: { title: 'Edit me...', version: '0.0.1' }, paths: {} })
@@ -1394,16 +1407,78 @@ thumpi.changeSecuritySchemeName = ($route, name) => {
 
 thumpi.saveDocs = () => {
   console.log('saveDocs')
-  //localStorage.setItem('yamls',thumpi.yamls);
+  if ( !thumpi.yamls ) {
+    thumpi.yamls = [];
+  }
+  for ( let i = 0; i > thumpi.yamls.length; i++){
+    localStorage.setItem('doc'+i, jsYaml.dump(thumpi.yamls.at(i)));
+  }
 }
 
 thumpi.loadDocs = () => {
-  if (!Object.hasOwn(localStorage, 'yamls')) {
-    localStorage.setItem('yamls', new Array())
+  if ( !thumpi.yamls) {
+    thumpi.yamls = [];
   }
-  //return localStorage.getItem('yamls');
-  return new Array()
+  /*if ( Object.hasOwn(localStorage, 'doc0') ) {
+    thumpi.yamls.push(jsYaml.load(localStorage.getItem('doc0'))) ;
+  }
+  if ( Object.hasOwn(localStorage, 'doc1') ) {
+    thumpi.yamls.push(jsYaml.load(localStorage.getItem('doc1'))) ;
+  }
+  if ( Object.hasOwn(localStorage, 'doc2') ) {
+    thumpi.yamls.push(jsYaml.load(localStorage.getItem('doc2'))) ;
+  }
+  if ( Object.hasOwn(localStorage, 'doc3') ) {
+    thumpi.yamls.push(jsYaml.load(localStorage.getItem('doc3'))) ;
+  }
+  if ( Object.hasOwn(localStorage, 'doc4') ) {
+    thumpi.yamls.push(jsYaml.load(localStorage.getItem('doc4'))) ;
+  } */
 }
+
+thumpi.initDocs = () => {
+  if ( !thumpi.yamls) {
+    thumpi.loadDocs();
+  }
+}
+
+thumpi.loadSamples = () => {
+  const basePath = document.querySelector('base').getAttribute('href');
+  return fetchYaml(basePath + 'samples/petstore.yaml', thumpi)
+}
+
+const fetchYaml = async function (path) {
+  console.log('getting', path)
+  return fetch(path)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText)
+        }
+        return response.text()
+      })
+      .then((data) => thumpi.importDoc(jsYaml.load(data)))
+      .catch((error) => console.error('There was a problem with the fetch operation:', error))
+}
+
+thumpi.importDoc = (doc) => {
+  console.log('import doc');
+  if ( doc ) {
+    thumpi.getDocs().push(doc);
+    thumpi.saveDocs();
+    if ( thumpi.isDebug ) {
+      console.log('document added');
+    }
+  } else {
+    if ( thumpi.isDebug ) {
+      console.log('document not added');
+    }
+  }
+  if ( thumpi.isDebug ) {
+    console.log('docs after import:',thumpi.getDocs().length);
+  }
+}
+
+
 
 // constructor
 
@@ -1411,8 +1486,7 @@ thumpi.baseLink = baseLink
 
 const createThumpi = () => {
   thumpi.yamls = thumpi.loadDocs()
-  //thumpi.yamls = new Array();
   return thumpi
 }
 
-export default createThumpi
+export default createThumpi()

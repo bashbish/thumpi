@@ -45,7 +45,7 @@ export default {
   template: `
 <ul class="nav nav-pills nav-fill">
   <li class="nav-item" >
-    <a class="nav-link active" aria-current="page" href="#" data-bs-toggle="collapse" data-bs-target="#addDocCard" aria-expanded="false" aria-controls="addDocCard">Documents <Downarrow></Downarrow></a>
+    <a class="nav-link active" aria-current="page" data-bs-toggle="collapse" data-bs-target="#addDocCard" aria-expanded="false" aria-controls="addDocCard">Documents <Downarrow></Downarrow></a>
   </li>
 </ul>
 

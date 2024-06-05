@@ -7,7 +7,7 @@ import Invalid from './icons/shieldinvalid.vue'
 import Modal from './modal.vue'
 import Downarrow from './icons/downarrow.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ref, inject } from 'vue'
+import { ref, inject, reactive} from 'vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -18,11 +18,13 @@ const emit = defineEmits(['documents'])
 
 const toLink = (link) => {
   console.log(link)
+
   router.push(link)
+
 }
 
 const add = () => {
-  const newDocIndex = $thumpi.addDoc(version)
+  const newDocIndex = $thumpi.addNewDocByVersion(version)
   toLink('/documents/' + newDocIndex)
 }
 
@@ -38,7 +40,21 @@ const onDelete = () => {
   console.log('onDelete')
   $thumpi.deleteDoc(target)
   target.value = -1
-  $forceUpdate()
+  docLength.value = $thumpi.getDocs().length;
+}
+
+const sample = () => {
+  console.log('b4 load');
+  $thumpi.loadSamples().then(() => {
+    console.log('after load');
+    console.log('after push');
+    console.log('b4 update docs');
+    docs.value = $thumpi.getDocs();
+    docLength.value = $thumpi.getDocs().length
+    console.log('after update docs');
+    toLink('/documents');
+  });
+
 }
 
 const docs = ref($thumpi.getDocs())
@@ -48,6 +64,7 @@ const message = ref('Delete doc?')
 const close = ref('Cancel')
 const save = ref('Delete')
 const target = ref(-1)
+const docLength = ref($thumpi.getDocs().length)
 </script>
 <template>
   <ul class="nav nav-pills nav-fill">
@@ -55,7 +72,6 @@ const target = ref(-1)
       <a
         class="nav-link active"
         aria-current="page"
-        href="#"
         data-bs-toggle="collapse"
         data-bs-target="#addDocCard"
         aria-expanded="false"
@@ -64,7 +80,7 @@ const target = ref(-1)
       ></a>
     </li>
   </ul>
-  {{ $thumpi.debug(docs) }}
+  {{ $thumpi.debug(docs) }} {{ $thumpi.debug(docLength) }}
   <div class="collapse" id="addDocCard">
     <div class="row g-3 d-flex justify-content-center mt-3 mb-3 align-items-center">
       <div class="col-auto">OpenAPi Document Version</div>
@@ -82,6 +98,9 @@ const target = ref(-1)
         </button>
         <button type="button" class="btn btn-primary m-2" @click="importYaml()">
           <yaml-file></yaml-file> Import
+        </button>
+        <button type="button" class="btn btn-primary m-2" @click="sample()">
+          <yaml-file></yaml-file> Import Pet Store
         </button>
       </div>
     </div>

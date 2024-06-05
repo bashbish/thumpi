@@ -28,6 +28,10 @@ const downLink = ref($thumpi.baseLink(route, 'document'))
     <input type="text" class="form-control" id="oaInfoTitle" v-model="info.title" />
   </div>
   <div class="mb-3">
+    <label for="oaInfoVersion" class="form-label">Version</label>
+    <input type="text" class="form-control" id="oaInfoVersion" v-model="info.version" />
+  </div>
+  <div class="mb-3">
     <label for="oaInfoSummary" class="form-label">Summary</label>
     <input type="text" class="form-control" id="oaInfoSummary" v-model="info.summary" />
   </div>
@@ -50,10 +54,7 @@ const downLink = ref($thumpi.baseLink(route, 'document'))
       v-model="info.termsOfService"
     />
   </div>
-  <div class="mb-3">
-    <label for="oaInfoVersion" class="form-label">Version</label>
-    <input type="text" class="form-control" id="oaInfoVersion" v-model="info.version" />
-  </div>
+
   <ul class="list-group mb-3">
     <li class="list-group-item" @click="toLink(downLink + '/info/contact')">
       <Edit></Edit> Contact

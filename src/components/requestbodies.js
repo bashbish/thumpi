@@ -15,7 +15,7 @@ export default {
   template: `
 <ul class="nav nav-pills nav-fill">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="#" @click="toLink($thumpi.baseLink($route, 'components'))">Request Bodies</a>
+    <a class="nav-link active" aria-current="page" @click="toLink($thumpi.baseLink($route, 'components'))">Request Bodies</a>
   </li>
 </ul>
 <ul class="list-group list-group-flush">

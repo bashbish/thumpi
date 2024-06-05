@@ -46,7 +46,7 @@ export default {
   template: `
 <ul class="nav nav-pills nav-fill mb-3">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="#" @click="toLink($thumpi.baseLink($route, 'server'))">Server Variables</a>
+    <a class="nav-link active" aria-current="page" @click="toLink($thumpi.baseLink($route, 'server'))">Server Variables</a>
   </li>
 </ul>
 <add-member :memberLabel="'Var'"  @member="add"></add-member>

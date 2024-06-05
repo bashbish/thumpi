@@ -11,7 +11,7 @@ defineProps({
 <template>
   <ul class="nav nav-pills nav-fill mb-3">
     <li class="nav-item">
-      <a class="nav-link active" aria-current="page" href="#" @click="emit('back')"
+      <a class="nav-link active" aria-current="page"  @click="emit('back')"
         >{{ label }}&nbsp;<Uparrow></Uparrow
       ></a>
     </li>

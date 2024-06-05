@@ -39,7 +39,7 @@ export default {
   template: `
 <ul class="nav nav-pills nav-fill">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="#" @click="toLink($thumpi.baseLink($route,'headers'))">Header <Uparrow></Uparrow></a>
+    <a class="nav-link active" aria-current="page" @click="toLink($thumpi.baseLink($route,'headers'))">Header <Uparrow></Uparrow></a>
   </li>
 </ul>
 {{ $thumpi.debug(header) }}

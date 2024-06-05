@@ -50,7 +50,7 @@ export default {
   template: `
 <ul class="nav nav-pills nav-fill mb-3">    
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="#" @click="toLink(upLink)">Servers <Uparrow></Uparrow></a>
+    <a class="nav-link active" aria-current="page" @click="toLink(upLink)">Servers <Uparrow></Uparrow></a>
   </li>
 </ul>
 {{ $thumpi.debug(servers) }}

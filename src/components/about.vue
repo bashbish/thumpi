@@ -16,7 +16,6 @@ const toLink = (link) => {
       <a
         class="nav-link active"
         aria-current="page"
-        href="#"
         @click="toLink($thumpi.baseLink(route, 'documents'))"
         >About <Uparrow></Uparrow
       ></a>
