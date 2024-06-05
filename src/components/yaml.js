@@ -29,7 +29,7 @@ export default {
       if (!imported.paths) {
         imported.paths = []
       }
-      this.thumpi.getDocs().push(imported)
+      this.$thumpi.getDocs().push(imported)
       this.$router.push('/documents')
     }
   },

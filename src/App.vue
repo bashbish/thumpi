@@ -6,7 +6,7 @@ import fetchYaml from '@/thumpi/fetchYaml.js'
 
 const $thumpi = inject('$thumpi')
 
-fetchYaml('/samples/petstore.yaml', $thumpi)
+fetchYaml('./samples/petstore.yaml', $thumpi)
 </script>
 
 <template>
