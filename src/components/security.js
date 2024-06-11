@@ -1,11 +1,17 @@
 import Uparrow from './icons/uparrow.js'
 import Downarrow from './icons/downarrow.js'
+import Alert from './alert.js'
+import ThumpiHeader from './thumpiheader.vue'
+import Modal from './modal.vue'
+import Trash from './icons/trash.vue'
+import ThumpiItem from './thumpiitem.js'
+import Plus from './icons/plus.vue'
 export default {
-  components: { Uparrow, Downarrow },
+  components: { Uparrow, Downarrow, Alert, ThumpiHeader, ThumpiItem, Trash, Modal, Plus },
   methods: {
     toLink(link) {
       console.log(link)
-      this.$router.push(link)
+      this.$router.push({path:link, force:true})
     },
     addSecurityType() {
       this.alert = undefined
@@ -16,47 +22,99 @@ export default {
         console.log(e)
         this.alert = e.message
       }
+    },
+    updateSecurityRequirementName() {
+      try {
+        this.$thumpi.updateSecurityRequirementName(this.$route, this.$route.params.seci, this.name);
+        this.toLink(this.$thumpi.baseLink(this.$route,'security')+'/'+encodeURIComponent(this.name))
+      } catch ( err ){
+        this.alert = err.message;
+      }
+    },
+    onBack() {
+      this.toLink(this.backLink);
+    },
+    addScope() {
+      try {
+        this.$thumpi.addScope(this.$route, this.secReqScope);
+        this.toLink(this.$thumpi.baseLink(this.$route,'security')+'/'+encodeURIComponent(this.name))
+        this.secReqScope = undefined;
+      } catch ( err ) {
+        this.alert = err.message;
+      }
+    },
+    onScopeTarget(scope) {
+      this.scopeTarget = scope;
+    },
+    onDeleteScope() {
+      console.log('onScopeTargetonDeleteScope',this.scopeTarget);
+      this.$thumpi.deleteSecurityRequirementScope(this.$route, this.scopeTarget);
+      //this.scopes = this.$thumpi.getSecurityRequirement(this.$route)[this.$route.params.seci];
+      this.toLink(this.$thumpi.baseLink(this.$route,'security')+'/'+encodeURIComponent(this.name))
+    },
+    onEnterScope() {
+      this.$refs.addScopeButton.click()
+    }
+  },
+  watch: {
+    '$route': function (to, from) {
+      this.$thumpi.params(this.$route);
+      console.log('watch hit');
+      this.security = this.$thumpi.getSecurityRequirement(to);
+      this.scopes = this.$thumpi.getSecurityRequirement(to)[to.params.seci]
+      this.name = to.params.seci;
+    },
+    'security': {
+      handler(val) {
+        console.log('security watcher triggered');
+      },
+      deep: true,
     }
   },
   data() {
     return {
-      security: this.$thumpi.getSecurity(this.$route),
+      security: this.$thumpi.getSecurityRequirement(this.$route),
+      scopes : this.$thumpi.getSecurityRequirement(this.$route)[this.$route.params.seci],
+      name : this.$route.params.seci,
       securityType: undefined,
-      alert: undefined
+      alert: undefined,
+      backLink : this.$thumpi.baseLink(this.$route, 'security'),
+      secReqScope:undefined,
+      modalScopeData: { title: 'Scopes', message: 'Delete Scope?', close: 'Cancel', save: 'Delete' },
+      scopeTarget:undefined,
+      flag: false,
     }
   },
   template: `
-<ul class="nav nav-pills nav-fill">
-  <li class="nav-item">
-    <a class="nav-link active" aria-current="page" @click="toLink($thumpi.baseLink($route, 'doc'))">Security <Uparrow></Uparrow></a>
-  </li>
-</ul>
 
-<ul class="nav nav-pills nav-fill mb-3">
-  <li class="nav-item">
-    <a class="nav-link active" aria-current="page" data-bs-toggle="collapse" data-bs-target="#addSecCard" aria-expanded="false" aria-controls="addSecCard">Security <Downarrow></Downarrow></a>
-  </li>
-</ul>
-"apiKey", "http", "oauth2", "openIdConnect"
-  <div class="collapse" id="addSecCard">
-  <div class="row g-3 d-flex justify-content-center my-2">
-      <div class="col-auto">
-        <label for="secType" class="visually-hidden">Security Type</label>
-        <select class="form-select" id="opAction" aria-label="Security Type" v-model="securityType">  
-          <option value="apiKey">apiKey</option>  
-          <option value="http">http</option>
-          <option value="oauth2">oauth2</option>
-          <option value="openIdConnect">openIdConnect</option>
-        </select>
-      </div>
-      <div class="col-auto">
-        <button type="submit" class="btn btn-primary mb-3" @click="addSec()">Add</button>
-      </div>
-  </div>
-  <div class="alert alert-danger" role="alert" v-show="alert">
-      {{ alert }}
-   </div>
-</div>
+    <thumpi-header :label="'Security Requirement'" @back="onBack"></thumpi-header>
+    {{ security }}  {{ name }}
+    <Alert :alert="alert"></Alert>
 
+    <div class="mb-3 mt-3">
+      <label for="seci" class="form-label">Name</label>
+      <input type="text" class="form-control" id="seci" aria-describedby="seci" v-model="name" @change="updateSecurityRequirementName">
+    </div>
+
+
+    <div class="mb-3">
+      <div class="d-flex align-items-center" >
+        <label class="me-auto" >Scopes</label>
+        <div class="row g-3 d-flex justify-content-center mb-3">
+          <div class="col-auto">
+            <label for="securityScope" class="visually-hidden">Scopes</label>
+            <input type="text" class="form-control" aria-label="securityScope" aria-describedby="securityScope" v-model="secReqScope" @keyup.enter="onEnterScope">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary" @click="addScope()" ref="addScopeButton"><Plus></Plus></button>
+          </div>
+        </div>
+      </div>
+      <ul class="list-group mt-2">
+        <li class="list-group-item list-group-item-action" v-for="value, index in scopes" ><thumpi-item :toLink="$thumpi.baseLink($route,'security')+'/'+encodeURIComponent(value)" :label="value" :modalId="'deleteScopeModal'" @delTarget="onScopeTarget" @toLink="toLink" :action="'trash'"></thumpi-item></li>
+      </ul>
+      <Modal #ref="deleteScopeModal" class="modal fade" id="deleteScopeModal" tabindex="-1" aria-labelledby="deleteScopeModalLabel" aria-hidden="true" :title="modalScopeData.title" :message="modalScopeData.message" :close="modalScopeData.close" :save="modalScopeData.save" @delete="onDeleteScope()"></Modal>
+    </div>
+    
 `
 }

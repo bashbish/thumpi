@@ -1,6 +1,7 @@
 import baseLink from './links.js'
 import router from "@/router/index.js";
 import jsYaml from 'js-yaml'
+import { isRef, toRaw } from "vue";
 
 const thumpi = {}
 
@@ -30,7 +31,9 @@ thumpi.params = ($route) => {
       'headeri',
       $route.params.headeri,
       'securitySchemei',
-      $route.params.securitySchemei
+      $route.params.securitySchemei,
+        'seci',
+        $route.params.seci
     )
   } catch (e) {
     console.log('error', e)
@@ -45,7 +48,7 @@ thumpi.debug = (obj) => {
   return undefined
 }
 
-thumpi.route = (router, link) => {
+thumpi.routex = (router, link) => {
   if ( thumpi.isDebug) {
     console.log(link)
   }
@@ -55,7 +58,7 @@ thumpi.route = (router, link) => {
 
 thumpi.getDocs = () => {
   if ( !thumpi.yamls ) {
-    thumpi.initDocs();
+    thumpi.loadDocs();
   }
   return thumpi.yamls
 }
@@ -488,17 +491,33 @@ thumpi.updateTagName = ($route, tagName) => {
 // security
 
 thumpi.getSecurities = ($route) => {
-  if (!thumpi.getDoc($route)['security']) {
-    thumpi.getDoc($route)['security'] = []
+  if (Object.hasOwn($route.params, 'opi')) {
+    const op = thumpi.getOperation($route);
+    if (!Object.hasOwn(op, 'security')) {
+      op['security'] = [];
+    }
+    return op.security;
+  } else {
+    const doc = thumpi.getDoc($route);
+    if (!Object.hasOwn(doc, 'security')) {
+      doc['security'] = []
+    }
+    return doc.security
   }
-  return thumpi.getDoc($route).security
 }
 
+
+
 thumpi.getSecurityRequirement = ($route) => {
-  if (!thumpi.getSecurities($route)[$route.params.seci]) {
-    //    thumpi.getSecurities($route)[$route.params.seci] = {type:$route.params.seci};
+  const securities = thumpi.getSecurities($route);
+  const found = securities.find(i => Object.hasOwn(i, $route.params.seci));
+  if ( found ) {
+    return found;
   }
-  return thumpi.getSecurities($route)[$route.params.seci]
+  const sec = {}
+  sec[$route.params.seci] = [];
+  securities.push(sec);
+  return sec;
 }
 
 thumpi.addSecurityRequirement = ($route, securityRequirementType) => {
@@ -506,22 +525,19 @@ thumpi.addSecurityRequirement = ($route, securityRequirementType) => {
   const secs = thumpi.getSecurities($route)
   console.log('secs', JSON.stringify(secs))
   const idx = secs.findIndex((o) => {
-    //console.log('o',JSON.stringify(o), 'asis', asis, 'key[0]',Object.keys(o)[0]);
-    return Object.keys(o)[0] === securityRequirementType + 'Auth'
+    return Object.keys(o)[0] === securityRequirementType; //  + 'Auth'
   })
   if (idx > -1) {
     throw new Error(`Security type ${securityRequirementType}Auth already exists.`)
   }
   const newReq = {}
-  newReq[securityRequirementType + 'Auth'] = []
+  newReq[securityRequirementType] = [] // + 'Auth'
   thumpi.getSecurities($route).push(newReq)
 }
 
 thumpi.updateSecurityRequirementName = ($route, asis, tobe) => {
-  //console.log('secs name update','asis', asis, 'tobe',tobe);
   const secs = thumpi.getSecurities($route)
   const idx = secs.findIndex((o) => {
-    //console.log('o',JSON.stringify(o), 'asis', asis, 'key[0]',Object.keys(o)[0]);
     return Object.keys(o)[0] === asis
   })
   const target = secs[idx]
@@ -529,7 +545,21 @@ thumpi.updateSecurityRequirementName = ($route, asis, tobe) => {
   const replacement = {}
   replacement[tobe] = target[asis]
   secs.splice(idx, 0, replacement)
-  //console.log('asis',asis,'tobe', tobe, 'idx',idx,'secs',JSON.stringify(secs), 'target',target);
+}
+
+thumpi.addScope = ($route, scope) => {
+  thumpi.params($route)
+  console.log('adding scope', scope);
+  const security = thumpi.getSecurityRequirement($route);
+  security[$route.params.seci].push(scope);
+}
+
+thumpi.deleteSecurityRequirementScope = ($route, scope) => {
+  const securityRequirement = thumpi.getSecurityRequirement($route);
+  const found = securityRequirement[$route.params.seci].findIndex(s => s === scope);
+  if (found > -1) {
+    securityRequirement[$route.params.seci].splice(found, 1);
+  }
 }
 
 // schema
@@ -1406,20 +1436,30 @@ thumpi.changeSecuritySchemeName = ($route, name) => {
 }
 
 thumpi.saveDocs = () => {
-  console.log('saveDocs')
+  console.log('saveDocs', thumpi.yamls.length)
   if ( !thumpi.yamls ) {
     thumpi.yamls = [];
   }
-  for ( let i = 0; i > thumpi.yamls.length; i++){
-    localStorage.setItem('doc'+i, jsYaml.dump(thumpi.yamls.at(i)));
-  }
+  let i = 0;
+  thumpi.yamls.forEach( y => {
+    var y = thumpi.yamls.at(i);
+    if ( isRef(y)) {
+      y = toRaw(y.value)
+    }
+    if ( i > 0) {
+      console.log(JSON.stringify(y))
+    }
+
+    localStorage.setItem('doc'+i, jsYaml.dump(y));
+    i++;
+  })
 }
 
 thumpi.loadDocs = () => {
   if ( !thumpi.yamls) {
     thumpi.yamls = [];
   }
-  /*if ( Object.hasOwn(localStorage, 'doc0') ) {
+  if ( Object.hasOwn(localStorage, 'doc0') ) {
     thumpi.yamls.push(jsYaml.load(localStorage.getItem('doc0'))) ;
   }
   if ( Object.hasOwn(localStorage, 'doc1') ) {
@@ -1433,18 +1473,12 @@ thumpi.loadDocs = () => {
   }
   if ( Object.hasOwn(localStorage, 'doc4') ) {
     thumpi.yamls.push(jsYaml.load(localStorage.getItem('doc4'))) ;
-  } */
-}
-
-thumpi.initDocs = () => {
-  if ( !thumpi.yamls) {
-    thumpi.loadDocs();
   }
 }
 
 thumpi.loadSamples = () => {
   const basePath = document.querySelector('base').getAttribute('href');
-  return fetchYaml(basePath + 'samples/petstore.yaml', thumpi)
+  return fetchYaml(basePath + 'samples/petstore.yaml')
 }
 
 const fetchYaml = async function (path) {
@@ -1464,7 +1498,6 @@ thumpi.importDoc = (doc) => {
   console.log('import doc');
   if ( doc ) {
     thumpi.getDocs().push(doc);
-    thumpi.saveDocs();
     if ( thumpi.isDebug ) {
       console.log('document added');
     }
@@ -1485,7 +1518,7 @@ thumpi.importDoc = (doc) => {
 thumpi.baseLink = baseLink
 
 const createThumpi = () => {
-  thumpi.yamls = thumpi.loadDocs()
+  // thumpi.yamls = thumpi.loadDocs()
   return thumpi
 }
 

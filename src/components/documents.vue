@@ -24,7 +24,7 @@ const toLink = (link) => {
 }
 
 const add = () => {
-  const newDocIndex = $thumpi.addNewDocByVersion(version)
+  const newDocIndex = $thumpi.addNewDocByVersion(version.value)
   toLink('/documents/' + newDocIndex)
 }
 
@@ -100,7 +100,7 @@ const docLength = ref($thumpi.getDocs().length)
           <yaml-file></yaml-file> Import
         </button>
         <button type="button" class="btn btn-primary m-2" @click="sample()">
-          <yaml-file></yaml-file> Import Pet Store
+          <yaml-file></yaml-file>Pet Store
         </button>
       </div>
     </div>

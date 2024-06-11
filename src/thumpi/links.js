@@ -1,67 +1,88 @@
 // links
 
 const baseLink = ($route, level) => {
+  var result = undefined;
   switch (level) {
     case 'doc': {
-      return '/documents/' + $route.params.doci
+      result =  '/documents/' + $route.params.doci;
+      break;
     }
     case 'document': {
-      return '/documents/' + $route.params.doci
+      result =  '/documents/' + $route.params.doci
+      break;
     }
     case 'documents': {
-      return '/documents'
+      result =  '/documents'
+      break;
     }
     case 'info': {
-      return '/documents/' + $route.params.doci + '/info'
+      result =  '/documents/' + $route.params.doci + '/info'
+      break;
     }
     case 'webhooks': {
-      return '/documents/' + $route.params.doci + '/webhooks'
+      result =  '/documents/' + $route.params.doci + '/webhooks'
+      break;
     }
     case 'security': {
-      return '/documents/' + $route.params.doci + '/security'
+      if ( Object.hasOwn($route.params, 'opi')) {
+        result =  '/documents/' + encodeURIComponent($route.params.doci) + '/paths/' + encodeURIComponent($route.params.pathi) + '/operations/' + encodeURIComponent($route.params.opi) + '/security';
+        break;
+      }
+      result =  '/documents/' + $route.params.doci + '/security'
+      break;
     }
     case 'externaldocs': {
       if ($route.params.tagi) {
         const docLink = '/documents/' + $route.params.doci
-        return docLink + '/tags/' + $route.params.tagi + '/externaldocs'
+        result =  docLink + '/tags/' + $route.params.tagi + '/externaldocs'
+        break;
       } else {
-        return '/documents/' + $route.params.doci + '/externaldocs'
+        result =  '/documents/' + $route.params.doci + '/externaldocs'
+        break;
       }
     }
     case 'components': {
-      return '/documents/' + $route.params.doci + '/components'
+      result =  '/documents/' + $route.params.doci + '/components'
+      break;
     }
     case 'servers': {
       if ($route.params.opi) {
         const docLink = '/documents/' + $route.params.doci
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const opLink = pathLink + '/operations/' + encodeURIComponent($route.params.opi)
-        return opLink + '/servers'
+        result =  opLink + '/servers'
+        break;
       } else if ($route.params.pathi) {
         const docLink = '/documents/' + $route.params.doci
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
-        return pathLink + '/servers'
+        result =  pathLink + '/servers'
+        break;
       } else {
-        return '/documents/' + $route.params.doci + '/servers'
+        result =  '/documents/' + $route.params.doci + '/servers'
+        break;
       }
     }
     case 'paths': {
       const docLink = '/documents/' + $route.params.doci
-      return docLink + '/paths'
+      result =  docLink + '/paths'
+      break;
     }
     case 'path': {
       const docLink = '/documents/' + $route.params.doci
-      return docLink + '/paths/' + encodeURIComponent($route.params.pathi)
+      result =  docLink + '/paths/' + encodeURIComponent($route.params.pathi)
+      break;
     }
     case 'operations': {
       const docLink = '/documents/' + $route.params.doci
       const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
-      return pathLink + '/operations'
+      result =  pathLink + '/operations'
+      break;
     }
     case 'operation': {
       const docLink = '/documents/' + $route.params.doci
       const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
-      return pathLink + '/operations/' + encodeURIComponent($route.params.opi)
+      result =  pathLink + '/operations/' + encodeURIComponent($route.params.opi)
+      break;
     }
     case 'parameters': {
       console.log(
@@ -72,16 +93,19 @@ const baseLink = ($route, level) => {
       )
       if ($route.fullPath.includes('components')) {
         const docLink = '/documents/' + $route.params.doci
-        return docLink + '/components/parameters'
+        result =  docLink + '/components/parameters'
+        break;
       } else if ($route.params.opi) {
         const docLink = '/documents/' + $route.params.doci
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const opLink = pathLink + '/operations/' + encodeURIComponent($route.params.opi)
-        return opLink + '/parameters'
+        result =  opLink + '/parameters'
+        break;
       } else if ($route.params.pathi) {
         const docLink = '/documents/' + $route.params.doci
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
-        return pathLink + '/parameters'
+        result =  pathLink + '/parameters'
+        break;
       }
     }
     case 'parameter': {
@@ -89,35 +113,42 @@ const baseLink = ($route, level) => {
         const docLink = '/documents/' + $route.params.doci
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const opLink = pathLink + '/operations/' + encodeURIComponent($route.params.opi)
-        return opLink + '/parameters/' + $route.params.parami
+        result =  opLink + '/parameters/' + $route.params.parami
+        break;
       } else if (Object.hasOwn($route.params, 'pathi')) {
         const docLink = '/documents/' + $route.params.doci
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
-        return pathLink + '/parameters/' + $route.params.parami
+        result =  pathLink + '/parameters/' + $route.params.parami
+        break;
       } else if ($route.fullPath.includes('components')) {
         const docLink = '/documents/' + $route.params.doci
         const compLink = docLink + '/components/parameters'
-        return compLink + '/' + encodeURIComponent($route.params.parami)
+        result =  compLink + '/' + encodeURIComponent($route.params.parami)
+        break;
       }
       throw new Error('could not determine parameter source link')
     }
     case 'tags': {
       const docLink = '/documents/' + $route.params.doci
-      return docLink + '/tags'
+      result =  docLink + '/tags'
+      break;
     }
     case 'tag': {
       const docLink = '/documents/' + $route.params.doci
-      return docLink + '/tags/' + $route.params.tagi
+      result =  docLink + '/tags/' + $route.params.tagi
+      break;
     }
     case 'securities': {
       const docLink = '/documents/' + $route.params.doci
-      return docLink + '/security'
+      result =  docLink + '/security'
+      break;
     }
     case 'schemas': {
       const docLink = '/documents/' + $route.params.doci
 
       if ($route.fullPath.includes('components')) {
-        return docLink + '/components/schemas'
+        result =  docLink + '/components/schemas'
+        break;
       }
     }
     case 'schema': {
@@ -129,13 +160,14 @@ const baseLink = ($route, level) => {
         const contentitem = response + '/content/' + encodeURIComponent($route.params.contenti)
         const encoding = contentitem + '/encoding/' + encodeURIComponent($route.params.encodingi)
         const header = encoding + '/headers/' + encodeURIComponent($route.params.headeri)
-        return header + '/schema'
+        result =  header + '/schema'
+        break;
       } else if (
         Object.hasOwn($route.params, 'pathi') &&
         Object.hasOwn($route.params, 'parami') & !Object.hasOwn($route.params, 'opi')
       ) {
         // documents/:doci/paths/:pathi/parameters/:parami/schema
-        return (
+        result =  (
           docLink +
           '/paths/' +
           encodeURIComponent($route.params.pathi) +
@@ -143,13 +175,15 @@ const baseLink = ($route, level) => {
           encodeURIComponent($route.params.parami) +
           '/schema'
         )
+        break;
       } else if (
         $route.fullPath.includes('components/parameters') &&
         Object.hasOwn($route.params, 'parami')
       ) {
-        return docLink + '/components/parameters/' + $route.params.parami + '/schema'
+        result =  docLink + '/components/parameters/' + $route.params.parami + '/schema'
+        break;
       } else if (Object.hasOwn($route.params, 'examplei')) {
-        return (
+        result =  (
           docLink +
           '/components/responses/' +
           $route.params.responsei +
@@ -159,22 +193,28 @@ const baseLink = ($route, level) => {
           $route.params.examplei +
           '/schema'
         )
+        break;
       } else if ($route.fullPath.includes('components/schemas')) {
-        return docLink + '/components/schemas/' + $route.params.schemai
+        result =  docLink + '/components/schemas/' + $route.params.schemai
+        break;
+
       } else if ($route.fullPath.includes('components/headers')) {
-        return docLink + '/components/headers/' + $route.params.headeri + '/schema'
+        result =  docLink + '/components/headers/' + $route.params.headeri + '/schema'
+        break;
       } else if (Object.hasOwn($route.params, 'opi') && Object.hasOwn($route.params, 'parami')) {
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const opLink = pathLink + '/operations/' + encodeURIComponent($route.params.opi)
         const paramLink = opLink + '/parameters/' + $route.params.parami
-        return paramLink + '/schema'
+        result =  paramLink + '/schema'
+        break;
       }
     }
     case 'properties': {
       const docLink = '/documents/' + $route.params.doci
       if ($route.fullPath.includes('components')) {
         const schemaiLink = docLink + '/components/schemas/' + $route.params.schemai
-        return schemaiLink + '/properties'
+        result =  schemaiLink + '/properties'
+        break;
       }
     }
     case 'server': {
@@ -182,20 +222,24 @@ const baseLink = ($route, level) => {
         const docLink = '/documents/' + $route.params.doci
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const opLink = pathLink + '/operations/' + encodeURIComponent($route.params.opi)
-        return opLink + '/servers/' + encodeURIComponent($route.params.servi)
+        result =  opLink + '/servers/' + encodeURIComponent($route.params.servi)
+        break;
       }
       const docLink = '/documents/' + $route.params.doci
-      return docLink + '/servers/' + encodeURIComponent($route.params.servi)
+      result =  docLink + '/servers/' + encodeURIComponent($route.params.servi)
+      break;
     }
     case 'responses': {
       const docLink = '/documents/' + $route.params.doci
       if (Object.hasOwn($route.params, 'opi')) {
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const opLink = pathLink + '/operations/' + encodeURIComponent($route.params.opi)
-        return opLink + '/responses'
+        result =  opLink + '/responses'
+        break;
       }
       if ($route.fullPath.includes('components')) {
-        return docLink + '/components/responses'
+        result =  docLink + '/components/responses'
+        break;
       }
     }
     case 'response': {
@@ -203,10 +247,12 @@ const baseLink = ($route, level) => {
       if (Object.hasOwn($route.params, 'opi')) {
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const opLink = pathLink + '/operations/' + encodeURIComponent($route.params.opi)
-        return opLink + '/responses/' + encodeURIComponent($route.params.responsei)
+        result =  opLink + '/responses/' + encodeURIComponent($route.params.responsei)
+        break;
       }
       if ($route.fullPath.includes('components')) {
-        return docLink + '/components/responses/' + $route.params.responsei
+        result =  docLink + '/components/responses/' + $route.params.responsei
+        break;
       }
     }
     case 'content': {
@@ -214,10 +260,12 @@ const baseLink = ($route, level) => {
       if (Object.hasOwn($route.params, 'opi')) {
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const opLink = pathLink + '/operations/' + encodeURIComponent($route.params.opi)
-        return opLink + '/responses/' + encodeURIComponent($route.params.responsei)
+        result =  opLink + '/responses/' + encodeURIComponent($route.params.responsei)
+        break;
       }
       if ($route.fullPath.includes('components/responses')) {
-        return docLink + '/components/responses/' + $route.params.responsei
+        result =  docLink + '/components/responses/' + $route.params.responsei
+        break;
       }
     }
     case 'contentitem': {
@@ -225,25 +273,28 @@ const baseLink = ($route, level) => {
       if (Object.hasOwn($route.params, 'opi') && Object.hasOwn($route.params, 'responsei')) {
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const opLink = pathLink + '/operations/' + encodeURIComponent($route.params.opi)
-        return (
+        result =  (
           opLink +
           '/responses/' +
           encodeURIComponent($route.params.responsei) +
           '/content/' +
           encodeURIComponent($route.params.contenti)
         )
+        break;
       } else if (Object.hasOwn($route.params, 'opi') && $route.fullPath.includes('/requestBody')) {
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const opLink = pathLink + '/operations/' + encodeURIComponent($route.params.opi)
-        return opLink + '/requestBody/content/' + encodeURIComponent($route.params.contenti)
+        result =  opLink + '/requestBody/content/' + encodeURIComponent($route.params.contenti)
+        break;
       } else if ($route.fullPath.includes('components')) {
-        return (
+        result =  (
           docLink +
           '/components/responses/' +
           $route.params.responsei +
           '/content/' +
           encodeURIComponent($route.params.contenti)
         )
+        break;
       }
     }
     case 'examples': {
@@ -257,14 +308,16 @@ const baseLink = ($route, level) => {
           encodeURIComponent($route.params.responsei) +
           '/content/' +
           $route.params.contenti
-        return contentLink + '/examples'
+        result =  contentLink + '/examples'
+        break;
       } else if (Object.hasOwn($route.params, 'opi') && $route.fullPath.includes('/requestBody')) {
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const opLink = pathLink + '/operations/' + encodeURIComponent($route.params.opi)
         const contentLink = opLink + '/requestBody/content/' + $route.params.contenti
-        return contentLink + '/examples'
+        result =  contentLink + '/examples'
+        break;
       } else if ($route.fullPath.includes('/components/responses/')) {
-        return (
+        result =  (
           docLink +
           '/components/responses/' +
           $route.params.responsei +
@@ -272,8 +325,10 @@ const baseLink = ($route, level) => {
           $route.params.contenti +
           '/examples'
         )
+        break;
       } else if ($route.fullPath.includes('/components')) {
-        return docLink + '/components/examples'
+        result =  docLink + '/components/examples'
+        break;
       }
     }
     case 'example': {
@@ -282,7 +337,8 @@ const baseLink = ($route, level) => {
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const opLink = pathLink + '/operations/' + encodeURIComponent($route.params.opi)
         const contentLink = opLink + '/requestBody/content/' + $route.params.contenti
-        return contentLink + '/examples' + $route.params.examplei
+        result =  contentLink + '/examples' + $route.params.examplei
+        break;
       } else if (Object.hasOwn($route.params, 'opi') && Object.hasOwn($route.params, 'responsei')) {
         const pathLink = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const opLink = pathLink + '/operations/' + encodeURIComponent($route.params.opi)
@@ -292,9 +348,10 @@ const baseLink = ($route, level) => {
           encodeURIComponent($route.params.responsei) +
           '/content/' +
           $route.params.contenti
-        return contentLink + '/examples/' + $route.params.examplei
+        result =  contentLink + '/examples/' + $route.params.examplei
+        break;
       } else if ($route.fullPath.includes('/components/responses')) {
-        return (
+        result =  (
           docLink +
           '/components/responses/' +
           $route.params.responsei +
@@ -303,18 +360,20 @@ const baseLink = ($route, level) => {
           '/examples/' +
           $route.params.examplei
         )
+        break;
       }
     }
     case 'headers': {
       const docLink = '/documents/' + $route.params.doci
       if ($route.fullPath.includes('components')) {
-        return docLink + '/components/headers'
+        result =  docLink + '/components/headers'
       }
     }
     case 'header': {
       const docLink = '/documents/' + $route.params.doci
       if ($route.fullPath.includes('components/headers')) {
-        return docLink + '/components/headers/' + $route.params.headeri
+        result =  docLink + '/components/headers/' + $route.params.headeri
+        break;
       } else if (Object.hasOwn($route.params, 'encodingi')) {
         const path = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
         const resp =
@@ -325,13 +384,14 @@ const baseLink = ($route, level) => {
           encodeURIComponent($route.params.responsei)
         const content = resp + '/content/' + encodeURIComponent($route.params.contenti)
         const encoding = content + '/encoding/' + encodeURIComponent($route.params.encodingi)
-        return encoding + '/headers/' + encodeURIComponent($route.params.headeri)
+        result =  encoding + '/headers/' + encodeURIComponent($route.params.headeri)
+        break;
       }
     }
     case 'requestBody': {
       const docLink = '/documents/' + $route.params.doci
       if (Object.hasOwn($route.params, 'opi')) {
-        return (
+        result =  (
           docLink +
           '/paths/' +
           encodeURIComponent($route.params.pathi) +
@@ -339,6 +399,7 @@ const baseLink = ($route, level) => {
           $route.params.opi +
           '/requestBody'
         )
+        break;
       }
     }
     case 'encoding': {
@@ -353,20 +414,25 @@ const baseLink = ($route, level) => {
           encodeURIComponent($route.params.responsei)
         const content = resp + '/content/' + encodeURIComponent($route.params.contenti)
         const encoding = content + '/encoding/' + encodeURIComponent($route.params.encodingi)
-        return encoding
+        result =  encoding
+        break;
       }
     }
     case 'requestBodies': {
       const docLink = '/documents/' + $route.params.doci
-      return docLink + '/components/requestBodies'
+      result =  docLink + '/components/requestBodies'
+      break;
     }
     case 'securitySchemes':
       {
         const docLink = '/documents/' + $route.params.doci
-        return docLink + '/components/securitySchemes'
+        result = docLink + '/components/securitySchemes'
+        break;
       }
-      throw new Error('Unable to build link for level: ' + level)
+      result =  new Error('Unable to build link for level: ' + level)
+      break;
   }
+  return result;
 }
 
 export default baseLink

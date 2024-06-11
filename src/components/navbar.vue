@@ -6,7 +6,8 @@ const $thumpi = inject('$thumpi')
 const router = useRouter()
 
 const toLink = function (link) {
-  $thumpi.route(router, link);
+  console.log(link);
+  router.push(link);
 }
 
 const save = () => {

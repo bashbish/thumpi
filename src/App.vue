@@ -5,7 +5,7 @@ import Navbar from './components/navbar.vue'
 </script>
 <template>
   <Navbar></Navbar>
-  <div class="container-fluid">
+  <div class="container">
     <div class="row">
       <div class="col">
         <RouterView />

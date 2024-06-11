@@ -3,11 +3,13 @@ import Downarrow from './icons/downarrow.js'
 import Edit from './icons/edit.js'
 import Trash from './icons/trash.js'
 import Modal from './modal.vue'
+import ThumpiHeader from './thumpiheader.vue'
 export default {
-  components: { Uparrow, Downarrow, Edit, Trash, Modal },
+  components: { Uparrow, Downarrow, Edit, Trash, Modal, ThumpiHeader },
   methods: {
     toLink(link) {
       console.log(link)
+
       this.$router.push(link)
     },
     addSecurityRequirement() {
@@ -18,9 +20,7 @@ export default {
       }
       try {
         this.$thumpi.addSecurityRequirement(this.$route, this.securityRequirement)
-        this.toLink(
-          this.$thumpi.baseLink(this.$route, 'securities') + '/' + this.securityRequirement + 'Auth'
-        )
+        this.$forceUpdate();
       } catch (e) {
         console.log(e)
         this.alert = e.message
@@ -38,22 +38,20 @@ export default {
       securityRequirement: undefined,
       alert: undefined,
       modalData: {
-        title: 'Security Requirement',
-        message: 'Delete Requirement?',
+        title: 'Securities',
+        message: 'Delete Security?',
         close: 'Cancel',
         save: 'Delete'
       },
-      target: -1
+      target: -1,
+      header: 'Security',
+      backLink: this.$thumpi.baseLink(this.$route, 'operation'),
     }
   },
   template: `
-<ul class="nav nav-pills nav-fill">
-  <li class="nav-item">
-    <a class="nav-link active" aria-current="page" @click="toLink($thumpi.baseLink($route, 'doc'))">Security Requirement <Uparrow></Uparrow></a>
-  </li>
-</ul>
 
-
+<thumpi-header :label="header" @back="toLink(backLink)"></thumpi-header>
+{{ securities }}
   <div class="row g-3 d-flex justify-content-center align-items-center my-2">
     <div class="col-auto">
     Type
@@ -79,7 +77,7 @@ export default {
 <ul class="list-group">
   <li class="list-group-item list-group-item-action"  v-for="value, index in securities">
     <div class="d-flex align-items-center">
-        <button class="btn btn-link me-auto" type="button" @click="toLink($thumpi.baseLink($route,'securities')+'/'+Object.keys(value)[0])" ><Edit></Edit>&nbsp;{{ Object.keys(value)[0] }}</button>
+        <button class="btn btn-link me-auto" type="button" @click="toLink($thumpi.baseLink($route,'security')+'/'+encodeURIComponent(Object.keys(value)[0]))" ><Edit></Edit>&nbsp;{{ Object.keys(value)[0] }}</button>
         <button type="button" class="btn btn-sm btn-primary" @click="target=index" data-bs-toggle="modal" data-bs-target="#secDeleteModal"><Trash></Trash></button>
     </div>
   </li>

@@ -50,7 +50,7 @@ export default {
   },
   beforeMount() {
     if (this.$route.params.opi) {
-      // this.navBackTag = "operation";
+      this.navBackTag = "operation";
     }
   },
   template: `
