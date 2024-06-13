@@ -17,7 +17,7 @@ const save = () => {
 <template>
   <nav className="navbar navbar-expand-lg navbar-light bg-light">
     <div className="container-fluid">
-      <a className="navbar-brand" @click="toLink('/')">Thumpi</a>
+      <a className="navbar-brand" @click="toLink('/')" id="navToThumpi">Thumpi</a>
       <button
         className="navbar-toggler"
         type="button"
@@ -37,6 +37,7 @@ const save = () => {
               @click="toLink('/documents')"
               data-bs-toggle="collapse"
               data-bs-target="#navbarNav"
+              id="navBarDocuments"
               >Documents</a>
           </li>
           <li className="nav-item">
@@ -45,6 +46,7 @@ const save = () => {
               @click="toLink('/about')"
               data-bs-toggle="collapse"
               data-bs-target="#navbarNav"
+              id="navBarAbout"
               >About</a
             >
           </li>

@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import index from '../router/index.js'
 import App from './app.js'
-import createThumpi from './thumpi/thumpi.js'
+import thumpi from './thumpi/thumpi.js'
 
 const fetchYaml = async function (path) {
   fetch(path)
@@ -19,7 +19,7 @@ const thumpiApp = createApp(App).use(index)
 thumpiApp.config.globalProperties.$fetchYaml = fetchYaml
 thumpiApp.config.globalProperties.$jsyamlLoad = jsyaml.load
 thumpiApp.config.globalProperties.$jsyamldump = jsyaml.dump
-thumpiApp.config.globalProperties.$thumpi = createThumpi()
+thumpiApp.config.globalProperties.$thumpi = thumpi
 thumpiApp.mount('#app')
 console.log('thumpi loaded')
 

@@ -18,9 +18,7 @@ const emit = defineEmits(['documents'])
 
 const toLink = (link) => {
   console.log(link)
-
   router.push(link)
-
 }
 
 const add = () => {
@@ -93,7 +91,7 @@ const docLength = ref($thumpi.getDocs().length)
         </select>
       </div>
       <div class="col-auto">
-        <button type="button" class="btn btn-primary m-2" @click="add()">
+        <button type="button" class="btn btn-primary m-2" @click="add()" id="addByVersion">
           <file-add></file-add> Add
         </button>
         <button type="button" class="btn btn-primary m-2" @click="importYaml()">
