@@ -48,9 +48,16 @@ export default {
       backLink: this.$thumpi.baseLink(this.$route, 'operation'),
     }
   },
+  beforeMount() {
+    if (Object.hasOwn(this.$route.params, 'opi')) {
+      this.upLink = this.$thumpi.baseLink(this.$route, 'operation')
+    } else {
+      this.upLink = this.$thumpi.baseLink(this.$route,'document')
+    }
+  },
   template: `
 
-<thumpi-header :label="header" @back="toLink(backLink)"></thumpi-header>
+<thumpi-header :label="header" @back="toLink(upLink)"></thumpi-header>
 {{ securities }}
   <div class="row g-3 d-flex justify-content-center align-items-center my-2">
     <div class="col-auto">

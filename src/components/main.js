@@ -20,6 +20,11 @@ thumpiApp.config.globalProperties.$fetchYaml = fetchYaml
 thumpiApp.config.globalProperties.$jsyamlLoad = jsyaml.load
 thumpiApp.config.globalProperties.$jsyamldump = jsyaml.dump
 thumpiApp.config.globalProperties.$thumpi = thumpi
+
+thumpiApp.config.errorHandler = (err, instance, info) => {
+    console.log('errorHandler',err,info);
+}
+
 thumpiApp.mount('#app')
 console.log('thumpi loaded')
 

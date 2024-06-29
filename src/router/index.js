@@ -133,6 +133,7 @@ const routes = [
     component: Links
   },
   { path: '/documents/:doci/paths/:pathi/operations/:opi/callbacks', component: Callbacks },
+  { path: '/documents/callbacks', component: Callbacks },
   { path: '/documents/:doci/paths/:pathi/operations/:opi/security', component: Securities },
   { path: '/documents/:doci/paths/:pathi/operations/:opi/security/:seci', component: Security },
   { path: '/documents/:doci/paths/:pathi/operations/:opi/servers', component: Servers },

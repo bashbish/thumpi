@@ -1435,6 +1435,25 @@ thumpi.changeSecuritySchemeName = ($route, name) => {
   }
 }
 
+// callbacks
+
+thumpi.getCallbacks = ($route) => {
+  if (Object.hasOwn($route.params, 'opi')) {
+    const op = thumpi.getOperation($route)
+    if (!Object.hasOwn(op, 'callbacks')) {
+      op['callbacks'] = {}
+    }
+    return op['callbacks']
+  } else if ($route.fullPath.includes('/components/callbacks')) {
+    const comp = thumpi.getComponents($route)
+    if (!Object.hasOwn(comp, 'callbacks')) {
+      comp['callbacks'] = {}
+    }
+    return comp['callbacks']
+  }
+}
+
+
 thumpi.saveDocs = () => {
   console.log('saveDocs', thumpi.yamls.length)
   if ( !thumpi.yamls ) {
@@ -1510,8 +1529,6 @@ thumpi.importDoc = (doc) => {
     console.log('docs after import:',thumpi.getDocs().length);
   }
 }
-
-
 
 // constructor
 

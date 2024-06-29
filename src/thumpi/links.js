@@ -423,12 +423,22 @@ const baseLink = ($route, level) => {
       result =  docLink + '/components/requestBodies'
       break;
     }
-    case 'securitySchemes':
-      {
+    case 'securitySchemes': {
         const docLink = '/documents/' + $route.params.doci
         result = docLink + '/components/securitySchemes'
         break;
+    }
+    case 'callbacks': {
+      if ($route.fullPath.includes('components/callbacks')) {
+        result =  docLink + '/components/callbacks'
+      } else {
+        const docLink = '/documents/' + $route.params.doci
+        const path = docLink + '/paths/' + encodeURIComponent($route.params.pathi)
+        const op = path + '/operations/' + $route.params.opi
+        result = op + '/callbacks'
       }
+      break;
+    }
       result =  new Error('Unable to build link for level: ' + level)
       break;
   }

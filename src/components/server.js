@@ -10,14 +10,22 @@ export default {
     return {
       server: this.$thumpi.getServer(this.$route),
       doci: this.$route.params.doci,
-      servi: this.$route.params.servi
+      servi: this.$route.params.servi,
+      upLink: undefined,
     }
   },
   components: { ServerVariables, Uparrow },
+  beforeMount() {
+    if (this.$route.fullPath.includes('components/servers')) {
+      this.upLink = this.$thumpi.baseLink(this.$route, 'components')
+    } else {
+      this.upLink = this.$thumpi.baseLink(this.$route, 'path')
+    }
+  },
   template: `
 <ul class="nav nav-pills nav-fill">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" @click="toLink('/documents/'+doci+'/servers')">Server <Uparrow></Uparrow></a>
+    <a class="nav-link active" aria-current="page" @click="toLink(upLink)">Server <Uparrow></Uparrow></a>
   </li>
 </ul>
 <div class="mb-3 mt-3">

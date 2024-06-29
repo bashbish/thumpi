@@ -27,7 +27,8 @@ export default {
       parameter: this.$thumpi.getParameter(this.$route),
       parami: this.$route.params.parami,
       baseLink: this.$thumpi.baseLink(this.$route, 'parameters'),
-      schemaLink: this.$thumpi.baseLink(this.$route, 'schema')
+      schemaLink: this.$thumpi.baseLink(this.$route, 'schema'),
+      upLink: undefined,
     }
   },
   watch: {
@@ -37,10 +38,17 @@ export default {
       console.log('Route has changed, fetching new data!', to.fullPath)
     }
   },
+  beforeMount() {
+    if (Object.hasOwn(this.$route.params, 'pathi')) {
+      this.upLink = this.$thumpi.baseLink(this.$route, 'path')
+    } else {
+      this.upLink = $thumpi.baseLink(this.$route,'parameters')
+    }
+  },
   template: `
 <ul class="nav nav-pills nav-fill">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" @click="toLink($thumpi.baseLink($route,'parameters'))">Parameter <Uparrow></Uparrow></a>
+    <a class="nav-link active" aria-current="page" @click="toLink(upLink)">Parameter <Uparrow></Uparrow></a>
   </li>
 </ul>
   {{ $thumpi.debug(parameter) }}

@@ -181,13 +181,13 @@ export default {
 </div>
 
 <div class="mb-3 mt-3">
-  <label for="pathItemSummary" class="form-label">Summary</label>      
+  <label for="pathItemSummary" class="form-label">Summary</label>       
   <input type="text" class="form-control" id="pathItemSummary" v-model="path.summary">
 </div>
 
 <div class="mb-3">
   <label for="pathItemDescription" class="form-label">Description</label>
-  <textarea class="form-control" id="pathItemDescription" rows="3"></textarea>
+  <textarea class="form-control" id="pathItemDescription" rows="3" v-model="path.description"></textarea>
 </div>
 
 
